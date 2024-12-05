@@ -2,9 +2,9 @@ const fs = require("fs");
 
 const memory = fs.readFileSync("./day3.txt").toString();
 
-const findAllMulOccurrences = (input) => {
-  // Regex to detect mul(ddd,ddd)
-  const regex = /mul\(\d{1,3},\d{1,3}\)/g;
+const findAllOccurrences = (input) => {
+  // Regex to detect mul(ddd,ddd), do() and don't()
+  const regex = /mul\(\d{1,3},\d{1,3}\)|do\(\)|don't\(\)/g;
 
   return input.match(regex);
 };
@@ -24,10 +24,22 @@ const getResult = (mulString) => {
   return 0;
 };
 
-const mul = findAllMulOccurrences(memory);
+const mul = findAllOccurrences(memory);
 
-const total = mul.reduce((sum, multiplication) => {
-  return (sum += getResult(multiplication));
-}, 0);
+let total = 0;
+let isEnabled = true;
+
+for (let index = 0; index < mul.length; index++) {
+  const multiplication = mul[index];
+
+  if (multiplication.slice(0, 1) === "d") {
+    isEnabled = multiplication === "do()";
+    continue;
+  }
+
+  if (isEnabled) {
+    total += getResult(multiplication);
+  }
+}
 
 console.log({ total });
