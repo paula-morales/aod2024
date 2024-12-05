@@ -32,13 +32,16 @@ let isEnabled = true;
 for (let index = 0; index < mul.length; index++) {
   const multiplication = mul[index];
 
-  if (multiplication.slice(0, 1) === "d") {
-    isEnabled = multiplication === "do()";
-    continue;
-  }
-
-  if (isEnabled) {
-    total += getResult(multiplication);
+  switch (multiplication) {
+    case "do()":
+      isEnabled = true;
+      break;
+    case "don't()":
+      isEnabled = false;
+      break;
+    default:
+      if (isEnabled) total += getResult(multiplication);
+      break;
   }
 }
 
